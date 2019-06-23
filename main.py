@@ -6,9 +6,12 @@ def main():
     # parser.add_argument('grammar', help='The grammar. Example: "" ') 
     # args = parser.parse_args()
     # grammar = args.grammar
-    grammar = "G = ( {S , A}, {a, b, c}, S, {S->aS,S->bA,A->&,A->cA})"
+    # grammar = "G = ( {S , A}, {a, b, c}, S, {S->aS,S->bA,A->&,A->cA})"
+    grammar_path = 'gramatica_exemplo_1.txt'
+    with open(grammar_path, 'r') as gf:
+        grammar = gf.readline().rstrip()
     g = Grammar(grammar)
-    # g.printRegex()
+    g.printRegex()
     g.validateGrammar()
 if __name__ == "__main__":
     main()
