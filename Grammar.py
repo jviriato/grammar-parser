@@ -85,7 +85,7 @@ class Grammar:
         prod_rule = self.startSymbol
         cabecote = word[0:1]
         parsing_word = ''
-        count = len(word) + 2
+        count = len(word)
         while True:
             print('A palavra atual: {}'.format(word))
             print('A palavra parseada: {}'.format(parsing_word))
@@ -100,10 +100,11 @@ class Grammar:
                 parsing_word += self.verifyProduction(cabecote, prod_rule)
             else:
                 parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
-            cabecote = word[0:1]
             word = word[1:]
+            cabecote = word[0:1]
             prod_rule = parsing_word[-1]
             count -= 1
+        parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
         print('Palavra final: ' + parsing_word)
         # word = word[1:]
         # parsing_word = self.verifyProduction(cabecote, pos)
@@ -124,7 +125,7 @@ class Grammar:
     
     def verifyProduction(self, cabecote, pos):
         if cabecote == '':
-            cabecote = '&' 
+            return '' 
         rules = self.getSymbolRules(pos)
         for leftSide, rightSide in rules:
             if cabecote in rightSide:
