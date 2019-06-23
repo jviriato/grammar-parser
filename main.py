@@ -13,7 +13,7 @@ def main():
     g = Grammar(grammar)
     g.validateGrammar()
 
-    word = "ba"
+    word = "baaa"
     g.recognize(word)
 if __name__ == "__main__":
     main()

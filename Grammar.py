@@ -8,7 +8,6 @@ class Grammar:
         self.terminalSymbols = self.setSymbols(self.regex.group(4))
         self.nonTerminalSymbols = self.setSymbols(self.regex.group(2))
         self.rules = self.setRules(self.regex.group(7))
-        print(self.rules)
     # Aqui ocorre o parse da gramática fornecida pelo usuário
     def doRegex(self, grammar_to_parse):
         pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z]\s*,\s*)*[a-z]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
@@ -105,8 +104,10 @@ class Grammar:
             prod_rule = parsing_word[-1]
             count -= 1
         parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
-        print('Palavra final: ' + parsing_word)
-    
+        if self.checkLastRule(prod_rule):
+            print('Palavra final: ' + parsing_word)
+        else:
+            print('erro.')
     def verifyProduction(self, cabecote, pos):
         if cabecote == '':
             return '' 
@@ -116,3 +117,12 @@ class Grammar:
                 print('c: \'{}\' achou na regra: {}'.format(cabecote, (leftSide, rightSide)))
                 return rightSide
         return False
+    
+    def checkLastRule(self, prod_rule):
+        terminal_chars = self.terminalSymbols + ['&']
+        rules = self.getSymbolRules(prod_rule)
+        valida = False
+        for leftSide, rightSide in rules:
+            if '&' in rightSide:
+                valida = True
+        return valida
