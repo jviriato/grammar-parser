@@ -1,0 +1,2 @@
+G = ({S, X, Y}, {a, b}, S, {S->bS, S->aX, X->bS, X->aY, Y->aY, Y->bY, Y->&})
+Gera o equivalente à (a+b)*aa(a+b)*
