@@ -86,11 +86,10 @@ class Grammar:
         parsing_word = ''
         count = len(word)
         while True:
-            print('A palavra atual: {}'.format(word))
+            print('\nA palavra atual: {}'.format(word))
             print('A palavra parseada: {}'.format(parsing_word))
             print('O cabeçote está em \'{}\''.format(cabecote))
             print('A próxima regra de produção é: ' + prod_rule)
-            print('')
 
             if count == 0:
                 break
@@ -107,7 +106,8 @@ class Grammar:
         if self.checkLastRule(prod_rule):
             print('Palavra final: ' + parsing_word)
         else:
-            print('erro.')
+            print('Erro: Regra de Produção \'{}\' não contém símbolo terminal.'.format(prod_rule))
+
     def verifyProduction(self, cabecote, pos):
         if cabecote == '':
             return '' 
@@ -116,7 +116,8 @@ class Grammar:
             if cabecote in rightSide:
                 print('c: \'{}\' achou na regra: {}'.format(cabecote, (leftSide, rightSide)))
                 return rightSide
-        return False
+        
+        raise ValueError('Não foi possível encontrar uma transformação para o símbolo \'{}\' na regra \'{}\''.format(cabecote, pos))
     
     def checkLastRule(self, prod_rule):
         terminal_chars = self.terminalSymbols + ['&']
