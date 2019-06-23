@@ -71,3 +71,63 @@ class Grammar:
         return (char in self.nonTerminalSymbols or
                 char in self.terminalSymbols or
                 char is '&')
+
+    def getSymbolRules(self, char):
+        symbolRules = []
+        for k, v in self.rules:
+            if k is char:
+                symbolRules.append((k,v))
+        return symbolRules
+
+    def recognize(self, w):
+        print('A palavra a ser reconhecida é: {}'.format(w))
+        word = w
+        prod_rule = self.startSymbol
+        cabecote = word[0:1]
+        parsing_word = ''
+        count = len(word) + 2
+        while True:
+            print('A palavra atual: {}'.format(word))
+            print('A palavra parseada: {}'.format(parsing_word))
+            print('O cabeçote está em \'{}\''.format(cabecote))
+            print('A próxima regra de produção é: ' + prod_rule)
+            print('')
+
+            if count == 0:
+                break
+
+            if len(parsing_word) == 0:
+                parsing_word += self.verifyProduction(cabecote, prod_rule)
+            else:
+                parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
+            cabecote = word[0:1]
+            word = word[1:]
+            prod_rule = parsing_word[-1]
+            count -= 1
+        print('Palavra final: ' + parsing_word)
+        # word = word[1:]
+        # parsing_word = self.verifyProduction(cabecote, pos)
+        # pos = parsing_word[-1]
+        # cabecote = word[0:1]
+        # print('\nPalavra atual: ' + word)
+        # print('Parsing word:' + parsing_word)
+        # print('Próxima produção: ' + pos)
+        # cabecote = word[0:1]
+        # word = word[1:]
+        # pos = parsing_word[-1]
+        # print('O cabeçote está em \'{}\''.format(cabecote))
+        # parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, pos))
+        # print('\nPalavra atual: ' + word)
+        # print('Parsing word: ' + parsing_word)
+        # print('Próxima produção: ' + pos)
+
+    
+    def verifyProduction(self, cabecote, pos):
+        if cabecote == '':
+            cabecote = '&' 
+        rules = self.getSymbolRules(pos)
+        for leftSide, rightSide in rules:
+            if cabecote in rightSide:
+                print('c: \'{}\' achou na regra: {}'.format(cabecote, (leftSide, rightSide)))
+                return rightSide
+        return False
