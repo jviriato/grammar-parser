@@ -11,7 +11,7 @@ def main():
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
-    g.printRegex()
     g.validateGrammar()
+    g.printRegex()
 if __name__ == "__main__":
     main()

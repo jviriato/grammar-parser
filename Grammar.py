@@ -8,7 +8,7 @@ class Grammar:
         self.terminalSymbols = self.setSymbols(self.regex.group(4))
         self.nonTerminalSymbols = self.setSymbols(self.regex.group(2))
         self.rules = self.setRules(self.regex.group(7))
-
+        print(self.rules)
     # Aqui ocorre o parse da gramática fornecida pelo usuário
     def doRegex(self, grammar_to_parse):
         pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z]\s*,\s*)*[a-z]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
@@ -34,8 +34,7 @@ class Grammar:
     # Transforma isto numa lista de listas.
     # Por fim, transforma a lista interna em um dicionário
     def setRules(self, regex):
-        return list(map(lambda a: dict(zip(a[::2], a[1::2])),
-                        list(map(lambda s: s.split('->'), re.sub('{|}| ', '', regex)
+        return list(map(lambda l: tuple(l), list(map(lambda s: s.split('->'), re.sub('{|}| ', '', regex)
                                  .split(',')))))
 
     # Validações da Gramática
@@ -57,9 +56,7 @@ class Grammar:
         return self.checkIfAlphabetExistsInRules()
 
     def checkIfAlphabetExistsInRules(self):
-        for char in self.rules:
-            key = list(char.keys())[0]
-            value = list(char.values())[0]
+        for key, value in self.rules:
             for c in value:
                 validation = self.checkIfCharExists(c)
                 if validation is False:
