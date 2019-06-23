@@ -1,1 +1,2 @@
-G = ({S}, {a}, S, {S->aS, S->a})
+G = ({S}, {a,b}, S, {S->aS, S->bS, S->&})
+Gera o equivalente à {a|b}* 

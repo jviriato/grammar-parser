@@ -7,7 +7,7 @@ def main():
     # args = parser.parse_args()
     # grammar = args.grammar
     # grammar = "G = ( {S , A}, {a, b, c}, S, {S->aS,S->bA,A->&,A->cA})"
-    grammar_path = 'gramatica_exemplo_1.txt'
+    grammar_path = 'gramatica_exemplo_2.txt'
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
