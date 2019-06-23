@@ -11,7 +11,7 @@ class Grammar:
 
     # Aqui ocorre o parse da gramática fornecida pelo usuário
     def doRegex(self, grammar_to_parse):
-        pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z]\s*,\s*)*[a-z]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*(([A-Z]\s*->\s*&\s*|\s*[A-Z]\s*->\s*[a-z]*\s*[A-Z]?)\s*,*)*\s*}\s*)(\))$"
+        pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z]\s*,\s*)*[a-z]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
         search = re.search(pattern, grammar_to_parse)
         return search
 
