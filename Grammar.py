@@ -106,22 +106,6 @@ class Grammar:
             count -= 1
         parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
         print('Palavra final: ' + parsing_word)
-        # word = word[1:]
-        # parsing_word = self.verifyProduction(cabecote, pos)
-        # pos = parsing_word[-1]
-        # cabecote = word[0:1]
-        # print('\nPalavra atual: ' + word)
-        # print('Parsing word:' + parsing_word)
-        # print('Próxima produção: ' + pos)
-        # cabecote = word[0:1]
-        # word = word[1:]
-        # pos = parsing_word[-1]
-        # print('O cabeçote está em \'{}\''.format(cabecote))
-        # parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, pos))
-        # print('\nPalavra atual: ' + word)
-        # print('Parsing word: ' + parsing_word)
-        # print('Próxima produção: ' + pos)
-
     
     def verifyProduction(self, cabecote, pos):
         if cabecote == '':
