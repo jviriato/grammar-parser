@@ -1,5 +1,5 @@
 import re
-
+from Word import Word
 
 class Grammar:
     def __init__(self, grammar_to_parse):
@@ -78,52 +78,25 @@ class Grammar:
                 symbolRules.append((k,v))
         return symbolRules
 
+    def printStats(self, word, parsing_word, prod_rule):
+        print('\nA palavra atual: {}'.format(word))
+        print('A palavra parseada: {}'.format(parsing_word))
+        # print('O cabeçote está em \'{}\''.format(cabecote))
+        print('A próxima regra de produção é: ' + prod_rule)
+            
     def recognize(self, w):
-        print('A palavra a ser reconhecida é: {}'.format(w))
-        word = w
-        prod_rule = self.startSymbol
-        cabecote = word[0:1]
-        parsing_word = ''
-        count = len(word)
-        while True:
-            print('\nA palavra atual: {}'.format(word))
-            print('A palavra parseada: {}'.format(parsing_word))
-            print('O cabeçote está em \'{}\''.format(cabecote))
-            print('A próxima regra de produção é: ' + prod_rule)
-
-            if count == 0:
-                break
-
-            if len(parsing_word) == 0:
-                parsing_word += self.verifyProduction(cabecote, prod_rule)
-            else:
-                parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
-            word = word[1:]
-            cabecote = word[0:1]
-            prod_rule = parsing_word[-1]
-            count -= 1
-        parsing_word = parsing_word.replace(parsing_word[-1], self.verifyProduction(cabecote, prod_rule))
-        if self.checkLastRule(prod_rule):
-            print('Palavra final: ' + parsing_word)
-        else:
-            print('Erro: Regra de Produção \'{}\' não contém símbolo terminal.'.format(prod_rule))
-
-    def verifyProduction(self, cabecote, pos):
-        if cabecote == '':
-            return '' 
-        rules = self.getSymbolRules(pos)
-        for leftSide, rightSide in rules:
-            if cabecote in rightSide:
-                print('c: \'{}\' achou na regra: {}'.format(cabecote, (leftSide, rightSide)))
-                return rightSide
-        
-        raise ValueError('Não foi possível encontrar uma transformação para o símbolo \'{}\' na regra \'{}\''.format(cabecote, pos))
-    
-    def checkLastRule(self, prod_rule):
-        terminal_chars = self.terminalSymbols + ['&']
-        rules = self.getSymbolRules(prod_rule)
-        valida = False
-        for leftSide, rightSide in rules:
-            if '&' in rightSide:
-                valida = True
-        return valida
+        word = Word(w, self.startSymbol, self.rules)
+        print('A palavra a ser reconhecida é: {}'.format(word.word))
+        print('Ela tem este símbolo: {}'.format(word.prod_rule))
+        print('E estas regras: {}'.format(word.relevantRules()))
+        print('Os filhos dessa palavra são: {}'.format(word.children))
+        print('')
+        print('A palavra a ser reconhecida é: {}'.format(word.children[0].word))
+        print('Ela tem este símbolo: {}'.format(word.children[0].prod_rule))
+        print('E estas regras: {}'.format(word.children[0].relevantRules()))
+        print('Os filhos dessa palavra são: {}'.format(word.children[0].children))
+        print('')
+        print('A palavra a ser reconhecida é: {}'.format(word.children[1].word))
+        print('Ela tem este símbolo: {}'.format(word.children[1].prod_rule))
+        print('E estas regras: {}'.format(word.children[1].relevantRules()))
+        print('Os filhos dessa palavra são: {}'.format(word.children[1].children))

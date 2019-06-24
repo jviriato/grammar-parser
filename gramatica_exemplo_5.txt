@@ -1,0 +1,2 @@
+G = ({S, A}, {a, b}, S, {S->aA, A->baA, A->&})
+Gera o equivalente à a(ba)*

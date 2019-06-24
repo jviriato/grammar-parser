@@ -1,0 +1,11 @@
+G = ({S,A}, {a,b}, S, {S->aS, S->aaA, A->bA, A->bbb, S->&})
+Gera o equivalente à aabbb
+
+Palavra atual: aabbb
+Parseada:
+
+Palavra atual: bbb
+Parseada: aaA
+
+Palavra atual: bbb
+Parseada: aaA
