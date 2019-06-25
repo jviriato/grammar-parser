@@ -1,9 +1,10 @@
 import re
 class Word:
-    def __init__(self, word, prod_rule, rules, parent = None, children = []):
+    def __init__(self, word, prod_rule, rules, parsing_word = '', parent = None, children = []):
         self.word = word
         self.parent = parent
         self.prod_rule = prod_rule
+        self.parsing_word = parsing_word
         self.rules = rules
         self.children = self.getChildren()
     
@@ -28,10 +29,11 @@ class Word:
             if len(w[:-1]) > 0 and w[:-1] in self.word:
                 # print('Achei {} na palavra \'{}\'.'.format(w, self.word))
                 # print('A regra de {} é {}'.format(w, rules[i]))
-                tmp_word  = self.word[(len(w)-1):]
+                new_word  = self.word[(len(w)-1):]
+                new_parsing_word = self.word[:(len(w)-1)] + self.prod_rule
                 if uppercase.search(w):
                     prod_rule = uppercase.search(w).group()
-                children.append(Word(tmp_word, prod_rule, self.rules, self))
+                children.append(Word(new_word, prod_rule, self.rules, self.parsing_word + new_parsing_word , self))
         return children
 
     def __repr__(self):
