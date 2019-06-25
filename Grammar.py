@@ -81,35 +81,21 @@ class Grammar:
                 symbolRules.append((k, v))
         return symbolRules
 
-    def printStats(self, word, parsing_word, prod_rule):
-        print('\nA palavra atual: {}'.format(word))
-        print('A palavra parseada: {}'.format(parsing_word))
-        # print('O cabeçote está em \'{}\''.format(cabecote))
-        print('A próxima regra de produção é: ' + prod_rule)
-
+    def printStats(self, word):
+        print('\t' * word.value + 'A palavra a ser reconhecida é: {}'.format(word.word))
+        print('\t' * word.value + 'A Parsing word é: {}'.format(word.parsing_word))
+        print('\t' * word.value + 'Ela tem este símbolo: {}'.format(word.prod_rule))
+        print('\t' * word.value + 'E estas regras: {}'.format(word.relevantRules()))
+        print('\t' * word.value + 'Os filhos dessa palavra são: {}'.format(word.children))
+        print('\t' * word.value + 'Nível: ' + str(word.value))
+        print('\t' * word.value + 'Os filhos de {}: '.format(word.word))
+        
     def recognize(self, w):
-        word = Word(w, self.startSymbol, self.rules)
-        print('A palavra a ser reconhecida é: {}'.format(word.word))
-        print('A Parsing word é: {}'.format(word.parsing_word))
-        print('Ela tem este símbolo: {}'.format(word.prod_rule))
-        print('E estas regras: {}'.format(word.relevantRules()))
-        print('Os filhos dessa palavra são: {}'.format(word.children))
-        print('')
-        print('Os filhos de {}: '.format(word.word))
+        word = Word(w, self.startSymbol, self.rules, value=0)
+        self.printStats(word)
         for children in word.children:
-            print('A palavra a ser reconhecida é: {}'.format(children.word))
-            print('A Parsing word é: {}'.format(children.parsing_word))
-            print('Ela tem este símbolo: {}'.format(children.prod_rule))
-            print('E estas regras: {}'.format(children.relevantRules()))
-            print('Os filhos dessa palavra são: {}'.format(children.children))
-            print('')
-            print('Os filhos de {}: '.format(children.word))
+            self.printStats(children)
             for c in children.children:
-                print('A palavra a ser reconhecida é: {}'.format(c.word))
-                print('A Parsing word é: {}'.format(c.parsing_word))
-                print('Ela tem este símbolo: {}'.format(c.prod_rule))
-                print('E estas regras: {}'.format(c.relevantRules()))
-                print('Os filhos dessa palavra são: {}'.format(c.children))
-                print('')
+                self.printStats(c)
                 # print('Os filhos de {}: '.format(c.word))
 

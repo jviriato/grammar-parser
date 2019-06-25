@@ -1,13 +1,13 @@
 import re
 class Word:
-    def __init__(self, word, prod_rule, rules, parsing_word = '', parent = None, children = []):
+    def __init__(self, word, prod_rule, rules, value, parsing_word = '', parent = None, children = []):
         self.word = word
         self.parent = parent
         self.prod_rule = prod_rule
         self.parsing_word = parsing_word
         self.rules = rules
+        self.value = value
         self.children = self.getChildren()
-    
     """Pega apenas as regras pertinentes ao símbolo de produção
     """
     def relevantRules(self):
@@ -42,7 +42,7 @@ class Word:
             new_word = self.word[len(terminais):]
             prod_rule = nao_terminal
             new_parsing_word = self.word[:len(terminais)]
-            children.append(Word(new_word,prod_rule,self.rules, self.parsing_word + new_parsing_word, self))
+            children.append(Word(new_word,prod_rule,self.rules, self.value + 1, self.parsing_word + new_parsing_word, self))
         return children
 
     def __repr__(self):
