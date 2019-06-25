@@ -17,23 +17,32 @@ class Word:
                 rules_defined.append((l,r))
         return rules_defined
     
+    def getValidRules(self,rules):
+        w = self.word
+        valid_rules = []
+        for l, r in rules:
+            if w.startswith(re.sub('[A-Z]', '', r)):
+                valid_rules.append((l,r))
+        return valid_rules
     """Define os filhos desta palavra
     """
     def getChildren(self):
         children = []
         rules = self.relevantRules()
+        valid_rules = self.getValidRules(rules)
+        # print('A palavra atual: {}'.format(self.word))
+        # print('Seu símbolo: {}'.format(self.prod_rule))
+        # print('Suas regras relevantes: {}'.format(rules))
+        # print('Suas regras válidas: {}'.format(valid_rules))
+        # print('')
         uppercase = re.compile('[A-Z]')
-        # \/ remove o símbolo não terminal das transformações
-        words = list(map(lambda r: r[1], rules))
-        for i, w in enumerate(words):
-            if len(w[:-1]) > 0 and w[:-1] in self.word:
-                # print('Achei {} na palavra \'{}\'.'.format(w, self.word))
-                # print('A regra de {} é {}'.format(w, rules[i]))
-                new_word  = self.word[(len(w)-1):]
-                new_parsing_word = self.word[:(len(w)-1)] + self.prod_rule
-                if uppercase.search(w):
-                    prod_rule = uppercase.search(w).group()
-                children.append(Word(new_word, prod_rule, self.rules, self.parsing_word + new_parsing_word , self))
+        for i, (prod, regra) in enumerate(valid_rules):
+            terminais = re.sub('[A-Z]', '', regra)
+            nao_terminal = re.sub('[a-z]', '', regra)    
+            new_word = self.word[len(terminais):]
+            prod_rule = nao_terminal
+            new_parsing_word = self.word[:len(terminais)]
+            children.append(Word(new_word,prod_rule,self.rules, self.parsing_word + new_parsing_word, self))
         return children
 
     def __repr__(self):
