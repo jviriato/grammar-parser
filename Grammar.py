@@ -113,10 +113,23 @@ class Grammar:
         for state in queue:
             # print(state)
             if state.isValid():
-                path = [state]
-                while state.parent:
-                    path.insert(0, state.parent)
-                    state = state.parent
+                path = self.buildPath(state)
                 break
             queue.extend(state.getChildren())
+        if len(path) == 0:
+            path = self.findError(queue)
+        return path
+
+    def findError(self, queue):
+        erro = queue[0]
+        for state in queue:
+            if state.value > erro.value:
+                erro = state
+        return self.buildPath(erro)
+
+    def buildPath(self, state):
+        path = [state]
+        while state.parent:
+            path.insert(0, state.parent)
+            state = state.parent
         return path

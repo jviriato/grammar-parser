@@ -46,7 +46,9 @@ class Word:
 
     def __repr__(self):
         tab = '\t' * self.value
-        return (('\tEntrada: {}\nRegra de Produção: {}\nPalavra Parseada: {}\n').format(self.word, self.prod_rule, self.parsing_word))
+        return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}{}\n').format(self.word, self.prod_rule, self.parsing_word, 'Válido' if self.isValid() else '', tab=tab))
     def __str__(self):
         tab = '\t' * self.value
         return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}{}').format(self.word, self.prod_rule, self.parsing_word, 'Válido' if self.isValid() else '', tab=tab))
+    
+    __repr__ = __str__
