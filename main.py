@@ -9,7 +9,7 @@ def main():
     g.validateGrammar()
     # word = i
     # nput('Digite a palavra a ser validada: ')
-    word = "aabbb"
+    word = "aabbbb"
     g.recognize(word)
 if __name__ == "__main__":
     main()

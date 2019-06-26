@@ -1,6 +1,6 @@
 import re
 class Word:
-    def __init__(self, word, prod_rule, rules, value, parsing_word = '', parent = None, children = []):
+    def __init__(self, word, prod_rule, rules, value, parsing_word, parent = None, children = []):
         self.word = word
         self.parent = parent
         self.prod_rule = prod_rule
@@ -17,6 +17,11 @@ class Word:
                 rules_defined.append((l,r))
         return rules_defined
     
+    def isValid(self):
+      if not self.word.strip() and not self.parsing_word[-1].isupper():
+          return True
+
+
     def getValidRules(self,rules):
         w = self.word
         valid_rules = []
@@ -30,22 +35,18 @@ class Word:
         children = []
         rules = self.relevantRules()
         valid_rules = self.getValidRules(rules)
-        # print('A palavra atual: {}'.format(self.word))
-        # print('Seu símbolo: {}'.format(self.prod_rule))
-        # print('Suas regras relevantes: {}'.format(rules))
-        # print('Suas regras válidas: {}'.format(valid_rules))
-        # print('')
-        uppercase = re.compile('[A-Z]')
         for i, (prod, regra) in enumerate(valid_rules):
             terminais = re.sub('[A-Z]', '', regra)
             nao_terminal = re.sub('[a-z]', '', regra)    
             new_word = self.word[len(terminais):]
             prod_rule = nao_terminal
             new_parsing_word = self.word[:len(terminais)]
-            children.append(Word(new_word,prod_rule,self.rules, self.value + 1, self.parsing_word + new_parsing_word, self))
+            children.append(Word(new_word,prod_rule,self.rules, self.value + 1, re.sub('[A-Z]', '', self.parsing_word) + new_parsing_word + prod_rule, self))
         return children
 
     def __repr__(self):
-        return ('({}, {})'.format(self.word, self.prod_rule))
+        tab = '\t' * self.value
+        return (('\tEntrada: {}\nRegra de Produção: {}\nPalavra Parseada: {}\n').format(self.word, self.prod_rule, self.parsing_word))
     def __str__(self):
-        return ('({}, {})'.format(self.word, self.prod_rule))
+        tab = '\t' * self.value
+        return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}{}').format(self.word, self.prod_rule, self.parsing_word, 'Válido' if self.isValid() else '', tab=tab))

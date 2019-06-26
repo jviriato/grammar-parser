@@ -85,17 +85,32 @@ class Grammar:
         print('\t' * word.value + 'A palavra a ser reconhecida é: {}'.format(word.word))
         print('\t' * word.value + 'A Parsing word é: {}'.format(word.parsing_word))
         print('\t' * word.value + 'Ela tem este símbolo: {}'.format(word.prod_rule))
-        print('\t' * word.value + 'E estas regras: {}'.format(word.relevantRules()))
-        print('\t' * word.value + 'Os filhos dessa palavra são: {}'.format(word.children))
+        #print('\t' * word.value + 'E estas regras: {}'.format(word.relevantRules()))
+        #print('\t' * word.value + 'Os filhos dessa palavra são: {}'.format(word.children))
         print('\t' * word.value + 'Nível: ' + str(word.value))
-        print('\t' * word.value + 'Os filhos de {}: '.format(word.word))
+        if word.isValid():
+          print('\t' * word.value + "Valid Word")
+        else:
+          print('\t' * word.value + 'Os filhos de {}: '.format(word.word))
         
     def recognize(self, w):
-        word = Word(w, self.startSymbol, self.rules, value=0)
+        word = Word(w, self.startSymbol, self.rules, value=0, parsing_word = self.startSymbol)
         self.printStats(word)
-        for children in word.children:
-            self.printStats(children)
-            for c in children.children:
-                self.printStats(c)
-                # print('Os filhos de {}: '.format(c.word))
+        path = self.bfs(word)
+        for p in path:
+            print(p)
+        # print('Os filhos de {}: '.format(c.word))
 
+    def bfs(self, word):
+        queue = [word]
+        path = []
+        for state in queue:
+            print(state)
+            if state.isValid():
+                path = [state]
+                while state.parent:
+                    path.insert(0, state.parent)
+                    state = state.parent
+                break
+            queue.extend(state.getChildren())
+        return path
