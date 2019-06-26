@@ -11,7 +11,7 @@ def main():
     if args.filename:
         grammar_path = args.filename
     else:
-        grammar_path = 'gramatica_exemplo_1.txt'
+        grammar_path = 'gramatica_exemplos/gramatica_exemplo_1.txt'
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
