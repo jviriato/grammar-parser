@@ -12,16 +12,16 @@ class Grammar:
 
     #  Aqui ocorre o parse da gramática fornecida pelo usuário
     def doRegex(self, grammar_to_parse):
-        pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z0-9]\s*,\s*)*[a-z0-9]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z0-9]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
+        pattern = r"(G\s*=\s*\()(?P<nao_terminais>\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*(?P<terminais>{\s*([a-z0-9]\s*,\s*)*[a-z0-9]+\s*})\s*,\s*(?P<start_symbol>[A-Z]{1})\s*,\s*(?P<prod_rules>\s*{\s*([A-Z]{1}->(&|[a-z0-9]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
         search = re.search(pattern, grammar_to_parse)
         return search
     
     # Print da regex
     def printRegex(self):
-        print('Símbolos não terminais: ' + self.regex.group(2))
-        print('Símbolos terminais: ' + self.regex.group(4))
-        print('Símbolo inicial: ' + self.regex.group(6))
-        print('Transformações: ' + self.regex.group(7))
+        print('Símbolos não terminais: ' + self.regex.group('nao_terminais'))
+        print('Símbolos terminais: ' + self.regex.group('terminais'))
+        print('Símbolo inicial: ' + self.regex.group('start_symbol'))
+        print('Transformações: ' + self.regex.group('prod_rules'))
 
     # Setters
     def setStartSymbol(self):
@@ -101,6 +101,7 @@ class Grammar:
 
 
     def recognize(self, w):
+        self.printRegex()
         print('Palavra a ser reconhecida: ' + w)
         if self.hasTerminal():
             w += '&'

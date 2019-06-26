@@ -29,6 +29,7 @@ class Word:
             if w.startswith(re.sub('[A-Z]', '', r)):
                 valid_rules.append((l,r))
         return valid_rules
+    
     """Define os filhos desta palavra
     """
     def getChildren(self):
