@@ -17,10 +17,10 @@ class Word:
                 rules_defined.append((l,r))
         return rules_defined
     
+
     def isValid(self):
       if not self.word.strip() and not self.parsing_word[-1].isupper():
           return True
-
 
     def getValidRules(self,rules):
         w = self.word

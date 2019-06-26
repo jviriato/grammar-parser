@@ -92,14 +92,20 @@ class Grammar:
           print('\t' * word.value + "Valid Word")
         else:
           print('\t' * word.value + 'Os filhos de {}: '.format(word.word))
-        
+
+    def hasTerminal(self):
+        for (l,r) in self.rules:
+            if '&' in r:
+                return True
+
+
     def recognize(self, w):
+        if self.hasTerminal():
+            w += '&'
         word = Word(w, self.startSymbol, self.rules, value=0, parsing_word = self.startSymbol)
-        self.printStats(word)
         path = self.bfs(word)
         for p in path:
             print(p)
-        # print('Os filhos de {}: '.format(c.word))
 
     def bfs(self, word):
         queue = [word]
