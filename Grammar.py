@@ -12,7 +12,7 @@ class Grammar:
     # Aqui ocorre o parse da gramática fornecida pelo usuário
 
     def doRegex(self, grammar_to_parse):
-        pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z]\s*,\s*)*[a-z]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
+        pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z0-9]\s*,\s*)*[a-z0-9]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z0-9]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
         search = re.search(pattern, grammar_to_parse)
         return search
 
@@ -111,7 +111,7 @@ class Grammar:
         queue = [word]
         path = []
         for state in queue:
-            print(state)
+            # print(state)
             if state.isValid():
                 path = [state]
                 while state.parent:

@@ -37,7 +37,7 @@ class Word:
         valid_rules = self.getValidRules(rules)
         for i, (prod, regra) in enumerate(valid_rules):
             terminais = re.sub('[A-Z]', '', regra)
-            nao_terminal = re.sub('[a-z]', '', regra)    
+            nao_terminal = re.sub('[a-z&0-9]', '', regra)    
             new_word = self.word[len(terminais):]
             prod_rule = nao_terminal
             new_parsing_word = self.word[:len(terminais)]
