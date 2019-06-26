@@ -9,13 +9,14 @@ class Grammar:
         self.terminalSymbols = self.setSymbols(self.regex.group(4))
         self.nonTerminalSymbols = self.setSymbols(self.regex.group(2))
         self.rules = self.setRules(self.regex.group(7))
-    # Aqui ocorre o parse da gramática fornecida pelo usuário
 
+    #  Aqui ocorre o parse da gramática fornecida pelo usuário
     def doRegex(self, grammar_to_parse):
         pattern = r"(G\s*=\s*\()(\s*{\s*([A-Z]\s*,\s*)*[A-Z]+\s*})\s*,\s*({\s*([a-z0-9]\s*,\s*)*[a-z0-9]+\s*})\s*,\s*([A-Z]{1})\s*,\s*(\s*{\s*([A-Z]{1}->(&|[a-z0-9]+[A-Z]?|[A-Z]{1})\s*,*\s*)+\s*}\s*)(\))$"
         search = re.search(pattern, grammar_to_parse)
         return search
-
+    
+    # Print da regex
     def printRegex(self):
         print('Símbolos não terminais: ' + self.regex.group(2))
         print('Símbolos terminais: ' + self.regex.group(4))
@@ -100,6 +101,7 @@ class Grammar:
 
 
     def recognize(self, w):
+        print('Palavra a ser reconhecida: ' + w)
         if self.hasTerminal():
             w += '&'
         word = Word(w, self.startSymbol, self.rules, value=0, parsing_word = self.startSymbol)
