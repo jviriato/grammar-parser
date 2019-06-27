@@ -44,7 +44,7 @@ class Grammar:
         try:
             validation = self.validateStartSymbol()
             if validation is False:
-                raise ValueError('Start Symbol not in Non-Terminal Symbols')
+                raise ValueError('Símbolo inicial nao está nos Símbolos não terminais')
             validation, s = self.checkIfAlphabetExistsInRules()
             if validation is False:
                 raise ValueError(
@@ -109,6 +109,8 @@ class Grammar:
         path = self.bfs(word)
         for p in path:
             print(p)
+        if not path[-1].isValid():
+            print('Símbolo \'{}\' não encontrado em nenhuma regra de produção: {}'.format(path[-1].word[1], path[-1].relevantRules()))
 
     def bfs(self, word):
         queue = [word]
