@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from Grammar import Grammar
+from DFA import DFA
 def main():
     parser = argparse.ArgumentParser(
         description='Argumentos para entrada de arquivo e palavra')
@@ -23,5 +24,17 @@ def main():
         # word = input('Digite a palavra a ser validada: ')
         word = "accc"
     g.recognize(word)
+
+
+    """Exemplo de DFA
+    ABC são estados
+    ab o alfabeto
+    """
+    dfa_states = {'A':{'a':'A', 'b':'B'},
+                  'B':{'a':'C', 'b':'A'},
+                  'C':{'a':'B', 'b':'C'}}
+    dfa = DFA(dfa_states,'A',{'A'})
+    print(dfa.accepts('babbbbbbbbbbab'))
+
 if __name__ == "__main__":
     main()
