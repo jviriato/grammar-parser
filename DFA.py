@@ -24,16 +24,44 @@ class DFA:
             transitions = self.convertRulesToTransitions(regras)
             #states[simbolo] = dict(transitions)
             states[simbolo] = transitions
-        self.printDFA(states)
+        #self.printDFA(states)
         self.states = states
 
     def convertER(self):
         self.ER_states = self.states
         self.verifyInitialStates()
         self.verifyAcceptStates()
-        self.deleteStates()
+        self.printDFA(self.ER_states)
+        ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
+        print(ER)
+    
+    def deleteStates(self, last, production):
+        print("\nDeleting Intermediate States")
+        er = ''
+        states = self.ER_states
+        #self.printDFA(states)
+        #print("production: ", production)
+        current = production[1]
+        print("atual: ", current, " - last: ", last)
+        accept_state = self.getAcceptStates(self.ER_states)
+        if(current == 'F'):
+            print("Estado final ", production[0])
+            if(production[0] != '&'):
+                return production[0]
+            return ''
+        elif(last == current):
+            #print("teste", production)
+            return production[0] + '*'
+        for transitions in states[current]:
+            #print(last, "->", transitions)
+            print("deleteStates(", current,", ", transitions, ")")
+            er = er + self.deleteStates(current, transitions)
+            print("ER parcial", er)
+        return  production[0] + er
+            #for transitions in states[simbol]:
+                #print(transitions)
 
-    def deleteStates(self):
+    def deleteStatesasdasda(self):
         print("Deleting Intermediate States")
         states = self.ER_states
         initial = self.start_state
@@ -41,6 +69,7 @@ class DFA:
         for simbol in states:
             if(simbol != initial and simbol not in accept_state):
                 self.deleteIntermediateStates(states, simbol)
+              
             
     def deleteIntermediateStates(self, dfa, simbol):
         print("Removing: ", simbol)
@@ -87,7 +116,7 @@ class DFA:
 
             del states[to_be_deleted]
 
-        self.printDFA(states)
+        #self.printDFA(states)
         
         
 
@@ -104,13 +133,13 @@ class DFA:
                     new_tuple[1] = 'F'
                     #new_tuple[2] = 'NO'
                 id = new_dfa[simbolo].index(index)
-                new_dfa[simbolo][id] = new_tuple
+                new_dfa[simbolo][id] = tuple(new_tuple)
 
             #new_dfa[simbolo].append(('&', 'F', 'NO'))
         #new_dfa['F'] = [('&', 'FINAL_STATE', 'YES')]
         new_dfa['F'] = [('&', 'FINAL_STATE')]
-        self.printDFA(new_dfa)
-        print(self.getAcceptStates(new_dfa))
+        #self.printDFA(new_dfa)
+        #print(self.getAcceptStates(new_dfa))
         self.ER_states = new_dfa
 	
 
@@ -122,16 +151,16 @@ class DFA:
             for transitions in states[simbolo]:
               if(transitions[1] == 'FINAL_STATE'):
                   accept_states.append(simbolo)
-        print("Accept States: ", accept_states)
+        #print("Accept States: ", accept_states)
         return accept_states
 
     def verifyInitialStates(self):
         print("Verifying Initial States")
         create_new_start_state = False
         for simbolo in self.states:
-            print(simbolo, "->", self.states[simbolo])
+            #print(simbolo, "->", self.states[simbolo])
             for transitions in self.states[simbolo]:
-              print(transitions)
+              #print(transitions)
               if(transitions[1] == self.start_state):
                 print("Exist Edge to Initial State")
                 create_new_start_state = True
@@ -139,7 +168,7 @@ class DFA:
             #self.ER_states[self.start_state + '1'] = ([('&', self.start_state, 'NO')])
             self.ER_states[self.start_state + '1'] = ([('&', self.start_state)])
             self.start_state = self.start_state + '1'
-        self.printDFA(self.ER_states)
+        #self.printDFA(self.ER_states)
 
     def printDFA(self, states):
       print("Current States:")
