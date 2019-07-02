@@ -78,7 +78,7 @@ class Grammar:
     def getSymbolRules(self, char):
         symbolRules = []
         for k, v in self.rules:
-            if k is char:
+            if k == char:
                 symbolRules.append((k, v))
         return symbolRules
 
