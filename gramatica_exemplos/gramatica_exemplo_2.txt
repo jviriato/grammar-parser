@@ -1,2 +1,2 @@
-G = ({S}, {a,b}, S, {S->aS, S->bS, S->&})
+G = ({S}, {a,b}, S, {S->a, S->bS, S->&})
 Gera o equivalente à {a|b}* 

@@ -1,2 +1,2 @@
-G = ({S, X, Y}, {a, b}, S, {S->bS, S->aX, X->bS, X->aY, Y->aY, Y->bY, Y->&})
-Gera o equivalente à (a+b)*aa(a+b)*
+G = ({S, A}, {a,b}, S, {S->aS, S->bA, S->&, A->a})
+Gera o equivalente à {a|b}* 

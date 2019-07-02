@@ -29,12 +29,13 @@ def main():
     ABC são estados
     ab o alfabeto
     """
-    dfa_states = {'A':{'a':'A', 'b':'B'},
-                  'B':{'a':'C', 'b':'A'},
-                  'C':{'a':'B', 'b':'C'}}
-    dfa = DFA(dfa_states,'A',{'A'})
+    #dfa_states = {'A':{'a':'A', 'b':'B'},
+    #              'B':{'a':'C', 'b':'A'},
+    #              'C':{'a':'B', 'b':'C'}}
+    dfa = DFA({},g.startSymbol,{})
     # print(dfa.accepts('babbbbbbbbbbab'))
 
     dfa.convertGrammar(g)
+    dfa.convertER()
 if __name__ == "__main__":
     main()
