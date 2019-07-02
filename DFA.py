@@ -31,10 +31,65 @@ class DFA:
         self.ER_states = self.states
         self.verifyInitialStates()
         self.verifyAcceptStates()
-        self.deleteIntermediateStates()
+        self.deleteStates()
 
-    def deleteIntermediateStates(self):
+    def deleteStates(self):
         print("Deleting Intermediate States")
+        states = self.ER_states
+        initial = self.start_state
+        accept_state = self.getAcceptStates(self.ER_states)
+        for simbol in states:
+            if(simbol != initial and simbol not in accept_state):
+                self.deleteIntermediateStates(states, simbol)
+            
+    def deleteIntermediateStates(self, dfa, simbol):
+        print("Removing: ", simbol)
+        new_state = ''
+        state_list = list(dfa)
+        print(state_list)
+        for state in dfa:
+            for transitions in dfa[state]:
+                new_state = new_state + '('
+                if(state == simbol):
+                    if(transitions[1] != simbol):
+                        new_state = new_state + transitions[0]
+                if(transitions[1] == simbol):
+                    print(state, " -> ", transitions)
+                    if(state == simbol):
+                        print("recursion")
+                        new_state = new_state + transitions[0] + '*'
+                    else:
+                        new_state = new_state + transitions[0]
+                new_state = new_state + ')'
+        print(new_state)
+
+    def deleteIntermediateStates123123(self):
+        print("Deleting Intermediate States")
+        states = self.ER_states
+        initial = self.start_state
+        accept_state = self.getAcceptStates(self.ER_states)
+        for transitions in states[initial]:
+            print("Initial ", initial, "-> ", transitions)
+            to_be_deleted = transitions[1]
+            new_state = transitions[0] + '('
+            for transitions_next in states[to_be_deleted]:
+                print("Next ", to_be_deleted, "-> ", transitions_next)
+                new_state = new_state + transitions_next[0]
+                
+                #states[initial][id] = new_state
+                new_state = new_state + '+'
+            new_state = new_state[:-1] + ')'
+            states[initial].append(new_state)
+            print("New State : ", new_state)
+            id = states[initial].index(transitions)
+            print(id)
+            states[initial].pop(id)
+
+            del states[to_be_deleted]
+
+        self.printDFA(states)
+        
+        
 
     def verifyAcceptStates(self):
         new_dfa = self.ER_states
@@ -56,6 +111,8 @@ class DFA:
         new_dfa['F'] = [('&', 'FINAL_STATE')]
         self.printDFA(new_dfa)
         print(self.getAcceptStates(new_dfa))
+        self.ER_states = new_dfa
+	
 
         
 
