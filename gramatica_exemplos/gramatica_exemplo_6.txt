@@ -1,1 +1,2 @@
 G = ({S, A, B}, {a, b}, S, {S->aA, A->aB, A->aS, A->&, B->bA})
+gera -> (a((aa)*|(ab)*))
