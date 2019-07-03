@@ -86,7 +86,7 @@ class Grammar:
         print('\t' * word.value + 'A palavra a ser reconhecida é: {}'.format(word.word))
         print('\t' * word.value + 'A Parsing word é: {}'.format(word.parsing_word))
         print('\t' * word.value + 'Ela tem este símbolo: {}'.format(word.prod_rule))
-        #print('\t' * word.value + 'E estas regras: {}'.format(word.relevantRules()))
+        print('\t' * word.value + 'E estas regras: {}'.format(word.relevantRules()))
         #print('\t' * word.value + 'Os filhos dessa palavra são: {}'.format(word.children))
         print('\t' * word.value + 'Nível: ' + str(word.value))
         if word.isValid():

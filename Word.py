@@ -13,7 +13,7 @@ class Word:
     def relevantRules(self):
         rules_defined = []
         for l, r in self.rules:
-            if self.prod_rule in l:
+            if self.prod_rule in l and self.prod_rule != '':
                 rules_defined.append((l,r))
         return rules_defined
     
@@ -50,6 +50,6 @@ class Word:
         return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}{}\n').format(self.word, self.prod_rule, self.parsing_word, 'Válido' if self.isValid() else '', tab=tab))
     def __str__(self):
         tab = '\t' * self.value
-        return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}{}').format(self.word, self.prod_rule, self.parsing_word, 'Válido' if self.isValid() else '', tab=tab))
+        return (('{tab}Entrada: {}\n{tab}Regra de Produção: {}\n{tab}Palavra Parseada: {}\n{tab}Regras válidas:{}\n{tab}{}').format(self.word, self.prod_rule, self.parsing_word, self.relevantRules(),  'Válido' if self.isValid() else '', tab=tab))
     
     __repr__ = __str__
