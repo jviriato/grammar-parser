@@ -1,0 +1,5 @@
+G = ({S, A, B}, {a, b}, S, {S->aA, A->bB, A->&, A->aS, B->bA})
+
+
+G = ({S, A}, {a, b}, S, {S->aA, A->bS, S->&})
+deve gerar algo como a(ba)*

@@ -32,98 +32,12 @@ class DFA:
         self.ER_states = self.states
         self.verifyInitialStates()
         self.verifyAcceptStates()
-        self.concatenateAcceptStates()
-        #self.printDFA(self.ER_states)
-        #print(self.start_state)
-        initial = self.ER_states[self.start_state][0]
-        #print(initial)
-        #ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
-        initial = ('', self.start_state)
-        while(len(self.ER_states) != 2 and self.ER_states[self.start_state][0][1] not in self.getAcceptStates(self.ER_states)):
-            self.printDFA(self.ER_states)
-            print(self.ER_states[self.start_state][0][1])
-            print(self.getAcceptStates(self.ER_states))
-            self.deleteStates('', initial)
-            print("==================================")
-
-        self.ER = self.ER_states[self.start_state][0][0]
-        self.ER = self.ER.replace('()*', '')
-        self.ER = self.ER.replace('&', '')
+        self.printDFA(self.ER_states)
+        print(self.start_state)
+        ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
+        self.ER = ER
     
     def deleteStates(self, last, production):
-        print("\nDeleting Intermediate States (",last ,")")
-        er = ''
-        dfa = self.ER_states
-        #self.printDFA(states)
-        print("\t(Current)", last, " -> ", production)
-        current = production[1]
-        print("atual: ", current, " - last: ", last)
-        accept_state = self.getAcceptStates(self.ER_states)
-        is_next_state_final = False
-        for states in dfa[current]:
-            next_transition = states[1]
-            print(current, ':')
-            print("  filho:", next_transition)
-            for next_states in dfa[next_transition]:
-                if(next_transition != current):
-                    print("      Next States", next_states)
-                    if(next_states[1] in accept_state):
-                        is_next_state_final = True
-        #self.printDFA(dfa)
-        if(is_next_state_final):
-            print("Existe um estado final dps desse")
-            self.lookAhead(current)
-            for states in dfa[current]:
-                print("states:", states[1])
-                
-                if(states[1] != current):
-                    global_er = ''
-                    recursion_er = ''
-                    for next_states in dfa[states[1]]:
-                        if(states[1] == next_states[1]):
-                            recursion_er += '(' + next_states[0] + ')*'
-                    #recursion_er += ')*'
-                    for next_states in dfa[states[1]]:
-                        print(states[1])
-                        print("  ", next_states)
-                        #if(states[1] == next_states[1]):
-                            #print("recursion")
-                            #a = 5
-                            #recursion_er = next_states[0] + '*'
-                        #else:
-                        if(states[1] != next_states[1]):
-                            next_er = next_states[0]
-                            new_accept = next_states[1]
-                            print("  next er: ", next_er)
-                            print("  new ac: ", new_accept)
-                            new_er = states[0] + recursion_er+ next_er
-                            print("  new er: ", new_er)
-                            #new_tuple = (new_er, new_accept)
-                            #new_tuple = tuple(new_tuple)
-                            #print("  ", new_tuple)
-                            global_er += new_er
-                            print("  new er: ", global_er)
-                            global_er += '|'
-                        print("global parcial: ", global_er)
-                    #new_tuple = (global_er[:-1], next_states[1])
-                    new_tuple = (global_er[:-1], new_accept)
-                    new_tuple = tuple(new_tuple)
-                    id = dfa[current].index(states)
-                    dfa[current][id] = new_tuple
-                    del dfa[states[1]]
-                    print("global er:", global_er)
-        else:
-            print("Itera mais a fundo")
-            for states in dfa[current]:
-                print("Iterator:", current, states)
-                if(current != states[1] and last != states[1]):
-                    self.deleteStates(current, states)
-        self.ER_states = dfa
-        #self.printDFA(self.ER_states)
-
-        
-    
-    def deleteStates1(self, last, production):
         print("\nDeleting Intermediate States (",last ,")")
         er = ''
         states = self.ER_states
@@ -136,30 +50,25 @@ class DFA:
         if(current == accept_state[0]):
             #print("Estado final ", production[0])
             if(production[0] != '&'):
-                return production[0] + ')'
-            return '&)'
+                return production[0]
+            return '&'
         elif(last == current):
             #print("teste", production)
             length = len(production[0])
             if(length > 1):
                 return '(' + production[0] + ')*'
             else:
-                return production[0] + '*)'
-        #else:
-            #print(production[0])
-            #er += production[0] + '|'     
+                return production[0] + '*'
+                
         er += '('
         
         self.lookAhead(current)
         #self.printDFA(self.ER_states)
-        new_er = er
+
         for transitions in states[current]:
             #print(last, "->", transitions)
-            print("\tdeleteStates(", current,", ", transitions, ")")
-            er_aux = self.deleteStates(current, transitions)
-            if(current != last and er_aux != ''):
-                er += '|'
-            new_er += er_aux
+            #print("deleteStates(", current,", ", transitions, ")")
+            new_er = self.deleteStates(current, transitions)
             if(new_er != ''):
                 new_er += ''
             er += new_er
@@ -198,44 +107,24 @@ class DFA:
                     else:
                         print("\tNo Closed Loop Detected on Transition ", next_state, "->", back_transitions)
 
-    def concatenateAcceptStates(self):
-        new_dfa = self.ER_states
-        print("Concatenating Accept States")
-        accept_states = self.getAcceptStates(new_dfa)
-        #print(accept_states)
-        length = len(new_dfa)
-        new_accept_state = 'F' + str(length)
-        new_dfa[new_accept_state] = [('&', 'FINAL_STATE')]
-        for states in accept_states:
-            state = list(new_dfa[states][0])
-            state[1] = new_accept_state
-            state = tuple(state)
-            #print(state)
-            new_dfa[states] = []
-            new_dfa[states].append(state)
-            
+
 
     def verifyAcceptStates(self):
         new_dfa = self.ER_states
         print("Verifying Accept States")
         accept_states = self.getAcceptStates(new_dfa)
-        #self.printDFA(new_dfa)
-        #print(accept_states)
+        
         for simbolo in accept_states:
             #print(new_dfa[simbolo])
             for index in new_dfa[simbolo]:
-                #print(index)
                 new_tuple = list(index)
-                length = len(new_dfa)
-                #print("size: ", length)
                 if(new_tuple[1] == 'FINAL_STATE'):
-                    new_simbolo = 'F' + str(length)
-                    new_dfa[new_simbolo] = [('&', 'FINAL_STATE')]
-                    new_tuple[1] = new_simbolo
+                    new_tuple[1] = 'F'
                     #new_tuple[2] = 'NO'
                 id = new_dfa[simbolo].index(index)
                 new_dfa[simbolo][id] = tuple(new_tuple)
 
+        new_dfa['F'] = [('&', 'FINAL_STATE')]
         #self.printDFA(new_dfa)
         self.ER_states = new_dfa
 	
