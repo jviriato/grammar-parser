@@ -8,6 +8,7 @@ class Word:
         self.rules = rules
         self.value = value
         self.children = self.getChildren()
+
     """Pega apenas as regras pertinentes ao símbolo de produção
     """
     def relevantRules(self):
@@ -19,7 +20,7 @@ class Word:
     
 
     def isValid(self):
-      if not self.word.strip() and not self.parsing_word[-1].isupper():
+      if (self.word == '&' or self.word == '') and not self.parsing_word[-1].isupper():
           return True
 
     def getValidRules(self,rules):
@@ -27,6 +28,7 @@ class Word:
         valid_rules = []
         for l, r in rules:
             if w.startswith(re.sub('[A-Z]', '', r)):
+                # print(l, r)
                 valid_rules.append((l,r))
         return valid_rules
     
