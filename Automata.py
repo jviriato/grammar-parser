@@ -1,7 +1,7 @@
 from Grammar import Grammar
 import re
 class Automata:
-    def __init__(self, states = None, start_state = None, accept_state = None):
+    def __init__(self, states, start_state, accept_state):
         self.states = states
         self.ER_states = []
         self.start_state = start_state
@@ -25,7 +25,7 @@ class Automata:
             transitions = self.convertRulesToTransitions(regras)
             #states[simbolo] = dict(transitions)
             states[simbolo] = transitions
-        #self.printAutomata(states)
+        #self.printDFA(states)
         self.states = states
 
     def convertER(self):
@@ -50,6 +50,7 @@ class Automata:
         self.ER = self.ER.replace('||', '|')
         self.ER = self.ER.replace('&&', '&')
         #self.ER = self.ER.replace('&', '')
+        self.ER = self.ER[1:-1].replace('(&)', '')
     
     def deleteStates(self, last, production):
         ##print("\nDeleting Intermediate States (",last ,")")
@@ -77,7 +78,7 @@ class Automata:
                 #print("states:", states[1])
                 
                 if(states[1] != current):
-                    global_er = ''
+                    global_er = '('
                     recursion_er = ''
                     for next_states in dfa[states[1]]:
                         if(states[1] == next_states[1]):
@@ -121,7 +122,7 @@ class Automata:
                         dfa[current][id] = new_tuple
                         
                     else:
-                        new_tuple = (global_er[:-1], new_accept)
+                        new_tuple = (global_er[:-1]+ ')', new_accept)
                         new_tuple = tuple(new_tuple)
                         id = dfa[current].index(states)
                         dfa[current][id] = new_tuple
@@ -205,7 +206,7 @@ class Automata:
             #self.ER_states[self.start_state + '1'] = ([('&', self.start_state, 'NO')])
             self.ER_states[self.start_state + '1'] = ([('&', self.start_state)])
             self.start_state = self.start_state + '1'
-        #self.printAutomata(self.ER_states)
+        #self.printDFA(self.ER_states)
 
     def printDFA(self, states):
       print("Current DFA:")
