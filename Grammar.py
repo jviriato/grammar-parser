@@ -51,6 +51,7 @@ class Grammar:
                     'Símbolo "{}" presente nas regras não existe em nenhum conjunto de símbolos'.format(s))
         except ValueError as e:
             exit(str(e))
+        return True
 
     def validateStartSymbol(self):
         return self.startSymbol in self.nonTerminalSymbols

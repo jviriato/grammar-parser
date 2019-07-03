@@ -17,14 +17,15 @@ def main():
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
-    g.validateGrammar()
+    ehValido = g.validateGrammar()
 
     if args.word:
         word = args.word
     else:
         word = input('Digite a palavra a ser validada: ')
 
-    ehValido = g.recognize(word)
+    g.recognize(word)
+    
     if ehValido:
         dfa = Automata(start_state = g.startSymbol)
         dfa.convertGrammar(g)
