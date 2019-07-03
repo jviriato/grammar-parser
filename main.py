@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 from Grammar import Grammar
-from DFA import DFA
+from Automata import Automata
+
 def main():
     parser = argparse.ArgumentParser(
         description='Argumentos para entrada de arquivo e palavra')
@@ -12,7 +13,7 @@ def main():
     if args.filename:
         grammar_path = args.filename
     else:
-        grammar_path = 'gramatica_exemplos/gramatica_exemplo_4.txt'
+        grammar_path = 'gramatica_exemplos/gramatica_exemplo_loop.txt'
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
@@ -25,8 +26,11 @@ def main():
 
     ehValido = g.recognize(word)
     if ehValido:
-        dfa = DFA()
+        dfa = Automata(start_state = g.startSymbol)
         dfa.convertGrammar(g)
+        dfa.convertER()
+        print('A ER gerada é: ')
+        print(dfa.ER)
 
 if __name__ == "__main__":
     main()

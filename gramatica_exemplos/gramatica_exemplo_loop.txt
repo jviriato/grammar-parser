@@ -1,2 +1,2 @@
 G = ({S, A}, {a, b}, S, {S->aA, A->bS, S->&})
-deve gerar algo como a(ba)*
+deve gerar algo como (ab)*

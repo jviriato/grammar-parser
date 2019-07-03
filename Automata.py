@@ -1,6 +1,6 @@
 from Grammar import Grammar
 import re
-class DFA:
+class Automata:
     def __init__(self, states = None, start_state = None, accept_state = None):
         self.states = states
         self.ER_states = []
@@ -25,14 +25,14 @@ class DFA:
             transitions = self.convertRulesToTransitions(regras)
             #states[simbolo] = dict(transitions)
             states[simbolo] = transitions
-        #self.printDFA(states)
+        #self.printAutomata(states)
         self.states = states
 
     def convertER(self):
         self.ER_states = self.states
         self.verifyInitialStates()
         self.verifyAcceptStates()
-        self.printDFA(self.ER_states)
+        self.printAutomata(self.ER_states)
         ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
         self.ER = ER[1:]
     
@@ -40,7 +40,7 @@ class DFA:
         print("\nDeleting Intermediate States (",last ,")")
         er = ''
         states = self.ER_states
-        #self.printDFA(states)
+        #self.printAutomata(states)
         print("\t(Current)", last, " -> ", production)
         current = production[1]
         #print("atual: ", current, " - last: ", last)
@@ -62,7 +62,7 @@ class DFA:
         er += '('
         
         self.lookAhead(current)
-        #self.printDFA(self.ER_states)
+        #self.printAutomata(self.ER_states)
 
         for transitions in states[current]:
             #print(last, "->", transitions)
@@ -124,7 +124,7 @@ class DFA:
                 new_dfa[simbolo][id] = tuple(new_tuple)
 
         new_dfa['F'] = [('&', 'FINAL_STATE')]
-        #self.printDFA(new_dfa)
+        #self.printAutomata(new_dfa)
         self.ER_states = new_dfa
 	
 
@@ -153,9 +153,9 @@ class DFA:
             #self.ER_states[self.start_state + '1'] = ([('&', self.start_state, 'NO')])
             self.ER_states[self.start_state + '1'] = ([('&', self.start_state)])
             self.start_state = self.start_state + '1'
-        #self.printDFA(self.ER_states)
+        #self.printAutomata(self.ER_states)
 
-    def printDFA(self, states):
+    def printAutomata(self, states):
       print("Current States:")
       for simbolo in states:
           print(simbolo, "->", states[simbolo])
