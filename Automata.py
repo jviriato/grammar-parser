@@ -1,7 +1,7 @@
 from Grammar import Grammar
 import re
 class Automata:
-    def __init__(self, states, start_state, accept_state):
+    def __init__(self, states = None, start_state = None, accept_state = None):
         self.states = states
         self.ER_states = []
         self.start_state = start_state
@@ -25,7 +25,7 @@ class Automata:
             transitions = self.convertRulesToTransitions(regras)
             #states[simbolo] = dict(transitions)
             states[simbolo] = transitions
-        #self.printDFA(states)
+        #self.printAutomata(states)
         self.states = states
 
     def convertER(self):
@@ -206,7 +206,7 @@ class Automata:
             #self.ER_states[self.start_state + '1'] = ([('&', self.start_state, 'NO')])
             self.ER_states[self.start_state + '1'] = ([('&', self.start_state)])
             self.start_state = self.start_state + '1'
-        #self.printDFA(self.ER_states)
+        #self.printAutomata(self.ER_states)
 
     def printDFA(self, states):
       print("Current DFA:")
