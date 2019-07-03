@@ -6,6 +6,7 @@ class DFA:
         self.ER_states = []
         self.start_state = start_state
         self.accept_state = accept_state
+        self.ER = ''
     
     def accepts(self, s):
         state = self.start_state
@@ -33,92 +34,79 @@ class DFA:
         self.verifyAcceptStates()
         self.printDFA(self.ER_states)
         ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
-        print(ER)
+        self.ER = ER[1:]
     
     def deleteStates(self, last, production):
-        print("\nDeleting Intermediate States")
+        print("\nDeleting Intermediate States (",last ,")")
         er = ''
         states = self.ER_states
         #self.printDFA(states)
-        #print("production: ", production)
+        print("\t(Current)", last, " -> ", production)
         current = production[1]
-        print("atual: ", current, " - last: ", last)
+        #print("atual: ", current, " - last: ", last)
         accept_state = self.getAcceptStates(self.ER_states)
-        if(current == 'F'):
-            print("Estado final ", production[0])
+        
+        if(current == accept_state[0]):
+            #print("Estado final ", production[0])
             if(production[0] != '&'):
                 return production[0]
             return ''
         elif(last == current):
             #print("teste", production)
-            return production[0] + '*'
+            length = len(production[0])
+            if(length > 1):
+                return '(' + production[0] + ')*'
+            else:
+                return production[0] + '*'
+                
+        er += '('
+        
+        self.lookAhead(current)
+        #self.printDFA(self.ER_states)
+
         for transitions in states[current]:
             #print(last, "->", transitions)
-            print("deleteStates(", current,", ", transitions, ")")
-            er = er + self.deleteStates(current, transitions)
-            print("ER parcial", er)
-        return  production[0] + er
-            #for transitions in states[simbol]:
-                #print(transitions)
-
-    def deleteStatesasdasda(self):
-        print("Deleting Intermediate States")
+            #print("deleteStates(", current,", ", transitions, ")")
+            new_er = self.deleteStates(current, transitions)
+            if(new_er != ''):
+                new_er += '|'
+            er += new_er
+            print("\tER parcial:", er)
+        return  production[0] + er[:-1]+ ')'
+     
+    def lookAhead(self, current):
+        print("\nLook Ahead for Closed Loops")
         states = self.ER_states
-        initial = self.start_state
+        #print("atual: ", current)
         accept_state = self.getAcceptStates(self.ER_states)
-        for simbol in states:
-            if(simbol != initial and simbol not in accept_state):
-                self.deleteIntermediateStates(states, simbol)
-              
-            
-    def deleteIntermediateStates(self, dfa, simbol):
-        print("Removing: ", simbol)
-        new_state = ''
-        state_list = list(dfa)
-        print(state_list)
-        for state in dfa:
-            for transitions in dfa[state]:
-                new_state = new_state + '('
-                if(state == simbol):
-                    if(transitions[1] != simbol):
-                        new_state = new_state + transitions[0]
-                if(transitions[1] == simbol):
-                    print(state, " -> ", transitions)
-                    if(state == simbol):
-                        print("recursion")
-                        new_state = new_state + transitions[0] + '*'
+        for transitions in states[current]:
+            next_state = transitions[1]
+            #print("next: ", next_state) 
+            if(next_state != current):
+                for back_transitions in states[next_state]:
+                    if(back_transitions[1] == current):
+                        print("\tClosed Loop Detected on Transition: ", next_state, "-> ", back_transitions)
+                        next_transition = states[next_state]
+                        if(len(next_transition[:-1]) == 0):
+                            #print("estado vazio")
+                            #print(transitions)
+                            looped_er = transitions[0] + back_transitions[0]
+                            print("\tlooped ER: ", looped_er)
+                            next_transition = states[current]
+                            print(next_transition)
+                            next_transition.remove(transitions)
+                            print(next_transition)
+                            next_transition.append([looped_er, current])
+                            print(next_transition)
+                        else:
+                            looped_er = back_transitions[0] + transitions[0]
+                            print("\tlooped ER: ", looped_er)
+                            next_transition.remove(back_transitions)
+                            next_transition.append([looped_er, next_state])
                     else:
-                        new_state = new_state + transitions[0]
-                new_state = new_state + ')'
-        print(new_state)
+                        print("\tNo Closed Loop Detected on Transition ", next_state, "->", back_transitions)
 
-    def deleteIntermediateStates123123(self):
-        print("Deleting Intermediate States")
-        states = self.ER_states
-        initial = self.start_state
-        accept_state = self.getAcceptStates(self.ER_states)
-        for transitions in states[initial]:
-            print("Initial ", initial, "-> ", transitions)
-            to_be_deleted = transitions[1]
-            new_state = transitions[0] + '('
-            for transitions_next in states[to_be_deleted]:
-                print("Next ", to_be_deleted, "-> ", transitions_next)
-                new_state = new_state + transitions_next[0]
-                
-                #states[initial][id] = new_state
-                new_state = new_state + '+'
-            new_state = new_state[:-1] + ')'
-            states[initial].append(new_state)
-            print("New State : ", new_state)
-            id = states[initial].index(transitions)
-            print(id)
-            states[initial].pop(id)
 
-            del states[to_be_deleted]
-
-        #self.printDFA(states)
-        
-        
 
     def verifyAcceptStates(self):
         new_dfa = self.ER_states
@@ -135,11 +123,8 @@ class DFA:
                 id = new_dfa[simbolo].index(index)
                 new_dfa[simbolo][id] = tuple(new_tuple)
 
-            #new_dfa[simbolo].append(('&', 'F', 'NO'))
-        #new_dfa['F'] = [('&', 'FINAL_STATE', 'YES')]
         new_dfa['F'] = [('&', 'FINAL_STATE')]
         #self.printDFA(new_dfa)
-        #print(self.getAcceptStates(new_dfa))
         self.ER_states = new_dfa
 	
 

@@ -37,5 +37,6 @@ def main():
 
     dfa.convertGrammar(g)
     dfa.convertER()
+    print("\nER : ", dfa.ER)
 if __name__ == "__main__":
     main()

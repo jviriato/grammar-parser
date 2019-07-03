@@ -1,3 +1,5 @@
+Testar a expressão regular: https://regex101.com/r/KjhYVv/6
+
 ### Como usar
 
 Você pode inserir os argumentos (caminho do arquivo e palavra a ser parseada) diretamente pela CLI:
