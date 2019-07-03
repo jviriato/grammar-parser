@@ -29,102 +29,154 @@ class Automata:
         self.states = states
 
     def convertER(self):
+        print("Creating Regular Expression:\n")
         self.ER_states = self.states
         self.verifyInitialStates()
         self.verifyAcceptStates()
-        self.printAutomata(self.ER_states)
-        ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
-        self.ER = ER[1:]
+        self.concatenateAcceptStates()
+        #self.printDFA(self.ER_states)
+        #print(self.start_state)
+        initial = self.ER_states[self.start_state][0]
+        #print(initial)
+        #ER = self.deleteStates(self.start_state, self.ER_states[self.start_state][0])
+        initial = ('', self.start_state)
+        while(len(self.ER_states) != 2 and self.ER_states[self.start_state][0][1] not in self.getAcceptStates(self.ER_states)):
+            #self.printDFA(self.ER_states)
+            self.deleteStates('', initial)
+            #print("==================================")
+
+        self.ER = self.ER_states[self.start_state][0][0]
+        self.ER = self.ER.replace('()*', '')
+        self.ER = self.ER.replace('||', '|')
+        self.ER = self.ER.replace('&&', '&')
+        #self.ER = self.ER.replace('&', '')
     
     def deleteStates(self, last, production):
-        print("\nDeleting Intermediate States (",last ,")")
+        ##print("\nDeleting Intermediate States (",last ,")")
         er = ''
-        states = self.ER_states
-        #self.printAutomata(states)
-        print("\t(Current)", last, " -> ", production)
+        dfa = self.ER_states
+        #self.printDFA(states)
+        ##print("\t(Current)", last, " -> ", production)
         current = production[1]
-        #print("atual: ", current, " - last: ", last)
+        ##print("Current: ", current, " - Last: ", last)
         accept_state = self.getAcceptStates(self.ER_states)
-        
-        if(current == accept_state[0]):
-            #print("Estado final ", production[0])
-            if(production[0] != '&'):
-                return production[0]
-            return ''
-        elif(last == current):
-            #print("teste", production)
-            length = len(production[0])
-            if(length > 1):
-                return '(' + production[0] + ')*'
-            else:
-                return production[0] + '*'
+        is_next_state_final = False
+        for states in dfa[current]:
+            next_transition = states[1]
+            ##print(current, ':')
+            ##print("  filho:", next_transition)
+            for next_states in dfa[next_transition]:
+                if(next_transition != current):
+                    ##print("      Filhos de", next_transition, next_states)
+                    if(next_states[1] in accept_state):
+                        is_next_state_final = True
+        #self.printDFA(dfa)
+        if(is_next_state_final):
+            ##print("Existe um estado final a frente")
+            for states in dfa[current]:
+                #print("states:", states[1])
                 
-        er += '('
-        
-        self.lookAhead(current)
-        #self.printAutomata(self.ER_states)
-
-        for transitions in states[current]:
-            #print(last, "->", transitions)
-            #print("deleteStates(", current,", ", transitions, ")")
-            new_er = self.deleteStates(current, transitions)
-            if(new_er != ''):
-                new_er += '|'
-            er += new_er
-            print("\tER parcial:", er)
-        return  production[0] + er[:-1]+ ')'
-     
-    def lookAhead(self, current):
-        print("\nLook Ahead for Closed Loops")
-        states = self.ER_states
-        #print("atual: ", current)
-        accept_state = self.getAcceptStates(self.ER_states)
-        for transitions in states[current]:
-            next_state = transitions[1]
-            #print("next: ", next_state) 
-            if(next_state != current):
-                for back_transitions in states[next_state]:
-                    if(back_transitions[1] == current):
-                        print("\tClosed Loop Detected on Transition: ", next_state, "-> ", back_transitions)
-                        next_transition = states[next_state]
-                        if(len(next_transition[:-1]) == 0):
-                            #print("estado vazio")
-                            #print(transitions)
-                            looped_er = transitions[0] + back_transitions[0]
-                            print("\tlooped ER: ", looped_er)
-                            next_transition = states[current]
-                            print(next_transition)
-                            next_transition.remove(transitions)
-                            print(next_transition)
-                            next_transition.append([looped_er, current])
-                            print(next_transition)
-                        else:
-                            looped_er = back_transitions[0] + transitions[0]
-                            print("\tlooped ER: ", looped_er)
-                            next_transition.remove(back_transitions)
-                            next_transition.append([looped_er, next_state])
+                if(states[1] != current):
+                    global_er = ''
+                    recursion_er = ''
+                    for next_states in dfa[states[1]]:
+                        if(states[1] == next_states[1]):
+                            recursion_er += '(' + next_states[0] + ')*'
+                    #recursion_er += ')*'
+                    new_accept = ''
+                    closed_loop = False
+                    for next_states in dfa[states[1]]:
+                        ##print("Deleting:",states[1])
+                        ##print("  ",states[1], "->", next_states)
+                        #if(states[1] == next_states[1]):
+                            #print("recursion")
+                            #a = 5
+                            #recursion_er = next_states[0] + '*'
+                        #else:
+                        if(states[1] != next_states[1] and last != states[1]):
+                            next_er = next_states[0]
+                            new_accept = next_states[1]
+                            ##print("\tConcatenating: ", states, next_states)
+                            ##print("\tNew Transition state: ", new_accept)
+                            new_er = states[0] + recursion_er+ next_er
+                            #new_tuple = (new_er, new_accept)
+                            #new_tuple = tuple(new_tuple)
+                            #print("  ", new_tuple)
+                            global_er += new_er
+                            ##print("\tResult: ", global_er)
+                            global_er += '|'
+                            ##print("\tParcial ER: ", global_er)
+                            #break;
+                        elif(last == states[1]):
+                            new_accept = current
+                            global_er += next_states[0]
+                            closed_loop = True
+                            
+                    #new_tuple = (global_er[:-1], next_states[1])
+                    if(closed_loop):
+                        ##print("Detected Closed Loop")
+                        new_tuple = (global_er, new_accept)
+                        new_tuple = tuple(new_tuple)
+                        id = dfa[current].index(states)
+                        dfa[current][id] = new_tuple
+                        
                     else:
-                        print("\tNo Closed Loop Detected on Transition ", next_state, "->", back_transitions)
+                        new_tuple = (global_er[:-1], new_accept)
+                        new_tuple = tuple(new_tuple)
+                        id = dfa[current].index(states)
+                        dfa[current][id] = new_tuple
+                        del dfa[states[1]]
+                    ##print("Global ER:", global_er)
+        else:
+            ##print("Itera mais a fundo")
+            for states in dfa[current]:
+                ##print("Iterator:", current, states)
+                if(current != states[1] and last != states[1]):
+                    self.deleteStates(current, states)
+        self.ER_states = dfa
+        #self.printDFA(self.ER_states)
 
-
+        
+    
+    def concatenateAcceptStates(self):
+        new_dfa = self.ER_states
+        print("Concatenating Accept States")
+        accept_states = self.getAcceptStates(new_dfa)
+        #print(accept_states)
+        length = len(new_dfa)
+        new_accept_state = 'F' + str(length)
+        new_dfa[new_accept_state] = [('&', 'FINAL_STATE')]
+        for states in accept_states:
+            state = list(new_dfa[states][0])
+            state[1] = new_accept_state
+            state = tuple(state)
+            #print(state)
+            new_dfa[states] = []
+            new_dfa[states].append(state)
+            
 
     def verifyAcceptStates(self):
         new_dfa = self.ER_states
         print("Verifying Accept States")
         accept_states = self.getAcceptStates(new_dfa)
-        
+        #self.printDFA(new_dfa)
+        #print(accept_states)
         for simbolo in accept_states:
             #print(new_dfa[simbolo])
             for index in new_dfa[simbolo]:
+                #print(index)
                 new_tuple = list(index)
+                length = len(new_dfa)
+                #print("size: ", length)
                 if(new_tuple[1] == 'FINAL_STATE'):
-                    new_tuple[1] = 'F'
+                    new_simbolo = 'F' + str(length)
+                    new_dfa[new_simbolo] = [('&', 'FINAL_STATE')]
+                    new_tuple[1] = new_simbolo
                     #new_tuple[2] = 'NO'
                 id = new_dfa[simbolo].index(index)
                 new_dfa[simbolo][id] = tuple(new_tuple)
 
-        new_dfa['F'] = [('&', 'FINAL_STATE')]
-        #self.printAutomata(new_dfa)
+        #self.printDFA(new_dfa)
         self.ER_states = new_dfa
 	
 
@@ -155,8 +207,8 @@ class Automata:
             self.start_state = self.start_state + '1'
         #self.printAutomata(self.ER_states)
 
-    def printAutomata(self, states):
-      print("Current States:")
+    def printDFA(self, states):
+      print("Current DFA:")
       for simbolo in states:
           print(simbolo, "->", states[simbolo])
 
