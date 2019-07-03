@@ -1,7 +1,7 @@
 from Grammar import Grammar
 import re
 class DFA:
-    def __init__(self, states, start_state, accept_state):
+    def __init__(self, states = None, start_state = None, accept_state = None):
         self.states = states
         self.start_state = start_state
         self.accept_state = accept_state

@@ -12,7 +12,7 @@ def main():
     if args.filename:
         grammar_path = args.filename
     else:
-        grammar_path = 'gramatica_exemplos/gramatica_exemplo_5.txt'
+        grammar_path = 'gramatica_exemplos/gramatica_exemplo_4.txt'
     with open(grammar_path, 'r') as gf:
         grammar = gf.readline().rstrip()
     g = Grammar(grammar)
@@ -21,20 +21,12 @@ def main():
     if args.word:
         word = args.word
     else:
-        # word = input('Digite a palavra a ser validada: ')
-        word = "accc"
-    # g.recognize(word)
-    
-    """Exemplo de DFA
-    ABC são estados
-    ab o alfabeto
-    """
-    dfa_states = {'A':{'a':'A', 'b':'B'},
-                  'B':{'a':'C', 'b':'A'},
-                  'C':{'a':'B', 'b':'C'}}
-    dfa = DFA(dfa_states,'A',{'A'})
-    # print(dfa.accepts('babbbbbbbbbbab'))
+        word = input('Digite a palavra a ser validada: ')
 
-    dfa.convertGrammar(g)
+    ehValido = g.recognize(word)
+    if ehValido:
+        dfa = DFA()
+        dfa.convertGrammar(g)
+
 if __name__ == "__main__":
     main()

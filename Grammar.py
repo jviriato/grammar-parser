@@ -110,7 +110,10 @@ class Grammar:
         for p in path:
             print(p)
         if not path[-1].isValid():
-            print('Símbolo \'{}\' não encontrado em nenhuma regra de produção: {}'.format(path[-1].word[1], path[-1].relevantRules()))
+            print('Erro nessa produção.')
+            return False
+        else:
+            return True
 
     def bfs(self, word):
         queue = [word]
