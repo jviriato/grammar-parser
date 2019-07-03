@@ -25,12 +25,12 @@ def main():
         word = input('Digite a palavra a ser validada: ')
 
     ehValido = g.recognize(word)
-    # if ehValido:
-    #     dfa = Automata(start_state = g.startSymbol)
-    #     dfa.convertGrammar(g)
-    #     dfa.convertER()
-    #     print('A ER gerada é: ')
-    #     print(dfa.ER)
+    if ehValido:
+        dfa = Automata(start_state = g.startSymbol)
+        dfa.convertGrammar(g)
+        dfa.convertER()
+        print('A ER gerada é: ')
+        print(dfa.ER)
 
 if __name__ == "__main__":
     main()
