@@ -1,2 +1,2 @@
 G = ({S, A}, {a, b, c}, S, {S->aS, S->bA, A->&, A->cA})
-Gera o equivalente à a*bc* 
+Gera o equivalente à a* + b c* 
