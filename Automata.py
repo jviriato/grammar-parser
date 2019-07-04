@@ -25,7 +25,9 @@ class Automata:
             transitions = self.convertRulesToTransitions(regras)
             #states[simbolo] = dict(transitions)
             states[simbolo] = transitions
-        #self.printAutomata(states)
+        # print(regras)
+        # print(transitions)
+        # print(states)
         self.states = states
 
     def convertER(self):
@@ -219,7 +221,7 @@ class Automata:
             prod_rule = r[0]
             isFinal = 'NO'
             esq = re.sub('[A-Z]', '', r[1])
-            dire = re.sub('[a-z&]', '', r[1])
+            dire = re.sub('[a-z&0-9]', '', r[1])
             if esq is '&':
                 dire = 'FINAL_STATE'
                 isFinal = 'YES'
