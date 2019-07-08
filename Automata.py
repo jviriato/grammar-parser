@@ -48,11 +48,14 @@ class Automata:
             #print("==================================")
 
         self.ER = self.ER_states[self.start_state][0][0]
+      
+        self.ER = self.ER.replace('&', '')
         self.ER = self.ER.replace('()*', '')
-        self.ER = self.ER.replace('||', '|')
-        self.ER = self.ER.replace('&&', '&')
+        self.ER = self.ER.replace('|)*', ')*')
+        self.ER = self.ER.replace('|)', ')')
+        self.ER = self.ER.replace('()', '')
         #self.ER = self.ER.replace('&', '')
-        self.ER = self.ER[1:-1].replace('(&)', '')
+        #self.ER = self.ER.replace('(&)', '')
     
     def deleteStates(self, last, production):
         ##print("\nDeleting Intermediate States (",last ,")")
@@ -76,18 +79,21 @@ class Automata:
         #self.printDFA(dfa)
         if(is_next_state_final):
             ##print("Existe um estado final a frente")
+            
             for states in dfa[current]:
                 #print("states:", states[1])
                 
                 if(states[1] != current):
                     global_er = '('
-                    recursion_er = ''
+                    recursion_er = '('
                     for next_states in dfa[states[1]]:
                         if(states[1] == next_states[1]):
-                            recursion_er += '(' + next_states[0] + ')*'
-                    #recursion_er += ')*'
+                            recursion_er += next_states[0] + '|'
+                    
+                    recursion_er +=')*'
                     new_accept = ''
                     closed_loop = False
+                    #global_er += '('
                     for next_states in dfa[states[1]]:
                         ##print("Deleting:",states[1])
                         ##print("  ",states[1], "->", next_states)
@@ -96,6 +102,7 @@ class Automata:
                             #a = 5
                             #recursion_er = next_states[0] + '*'
                         #else:
+                        #global_er += '('
                         if(states[1] != next_states[1] and last != states[1]):
                             next_er = next_states[0]
                             new_accept = next_states[1]
@@ -114,8 +121,8 @@ class Automata:
                             new_accept = current
                             global_er += next_states[0]
                             closed_loop = True
-                            
-                    #new_tuple = (global_er[:-1], next_states[1])
+
+                    #global_er += ')'
                     if(closed_loop):
                         ##print("Detected Closed Loop")
                         new_tuple = (global_er, new_accept)
@@ -130,6 +137,7 @@ class Automata:
                         dfa[current][id] = new_tuple
                         del dfa[states[1]]
                     ##print("Global ER:", global_er)
+           
         else:
             ##print("Itera mais a fundo")
             for states in dfa[current]:
